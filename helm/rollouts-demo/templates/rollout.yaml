@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ include "rollouts-demo.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    canary:
+      canaryService: {{ include "rollouts-demo.name" . }}-canary
+      stableService: {{ include "rollouts-demo.name" . }}-stable
+      trafficRouting:
+        istio:
+          virtualServices:
+          - name: {{ include "rollouts-demo.name" . }}-vsvc
+            routes:
+            - primary
+      steps:
+      {{- toYaml .Values.canary.steps | nindent 6 }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      {{- include "rollouts-demo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "rollouts-demo.selectorLabels" . | nindent 8 }}
+        istio-injection: enabled
+    spec:
+      containers:
+      - name: {{ include "rollouts-demo.name" . }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - name: http
+          containerPort: {{ .Values.containerPort }}
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
