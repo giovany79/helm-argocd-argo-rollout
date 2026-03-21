@@ -40,6 +40,7 @@ brew install argoproj/tap/kubectl-argo-rollouts
 .
 ├── README.md
 ├── setup-all-3.0.0.sh          # Script automatizado de instalación
+├── helm-upgrade.sh              # Wrapper para helm upgrade con appVersion
 ├── setup-all-2.0.0.sh          # Script anterior (sin Helm)
 ├── helm/
 │   └── rollouts-demo/
@@ -223,12 +224,17 @@ Usar el puerto HTTP asignado con el host `rollouts-demo.local`.
 Una vez todo esté corriendo, puedes simular un canary deployment cambiando la versión de la imagen:
 
 ```bash
-# Cambiar de green a yellow
+# Usando el script wrapper (actualiza appVersion en Chart.yaml automáticamente)
+./helm-upgrade.sh yellow
+
+# O manualmente (appVersion en helm history no reflejará el tag)
 helm upgrade rollouts-demo ./helm/rollouts-demo --set image.tag=yellow --force-conflicts
 
 # Observar el progreso del canary
 kubectl argo rollouts get rollout rollouts-demo -w
 ```
+
+> **Nota:** Helm no soporta `--app-version` en `helm upgrade` ([solo en `helm package`](https://helm.sh/docs/helm/helm_package/)). El script `helm-upgrade.sh` actualiza `Chart.yaml` antes del upgrade para que `helm history` muestre el tag correcto en `APP VERSION`.
 
 El rollout seguirá los pasos definidos en `values.yaml`:
 1. 5% del tráfico al canary → pausa manual
