@@ -185,6 +185,11 @@ kubectl get pods
 
 > **Nota:** `--force-conflicts` es necesario porque Argo Rollouts controller toma ownership del campo `.spec.selector` de los services canary y stable. Sin este flag, Helm 4 (que usa server-side apply) rechaza el upgrade por conflicto de field managers.
 
+> **Nota:** La Application de ArgoCD se registra sin auto-sync para evitar que ArgoCD revierta los cambios hechos con `helm upgrade` localmente. Para sincronizar manualmente, usá el botón SYNC en la UI de ArgoCD. Para reactivar auto-sync:
+> ```bash
+> kubectl patch application rollouts-demo -n argocd --type merge -p '{"spec":{"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}'
+> ```
+
 ---
 
 ## Acceso a los dashboards

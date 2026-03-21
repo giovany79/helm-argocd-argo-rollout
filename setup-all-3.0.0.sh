@@ -224,12 +224,14 @@ spec:
     server: https://kubernetes.default.svc
     namespace: default
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
     syncOptions:
     - CreateNamespace=true
 APPEOF
+
+echo_info "Auto-sync desactivado en ArgoCD para permitir upgrades locales con Helm."
+echo_info "Para sincronizar manualmente desde ArgoCD UI: click en SYNC."
+echo_info "Para reactivar auto-sync:"
+echo_info "  kubectl patch application rollouts-demo -n argocd --type merge -p '{\"spec\":{\"syncPolicy\":{\"automated\":{\"prune\":true,\"selfHeal\":true}}}}'"
 
 echo_info "Verificando recursos desplegados..."
 kubectl get rollout -n $HELM_NAMESPACE 2>/dev/null || echo_warning "CRD de Rollout aún no disponible"
