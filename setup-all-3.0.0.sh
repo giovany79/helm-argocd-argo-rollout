@@ -190,7 +190,7 @@ metadata:
     argocd.argoproj.io/secret-type: repository
 stringData:
   type: git
-  url: https://github.com/giovany79/argo-rollout.git
+  url: https://github.com/giovany79/helm-argocd-argo-rollout.git
   insecure: "true"
 EOF
 
@@ -214,7 +214,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/giovany79/argo-rollout.git
+    repoURL: https://github.com/giovany79/helm-argocd-argo-rollout.git
     targetRevision: main
     path: helm/rollouts-demo
     helm:
