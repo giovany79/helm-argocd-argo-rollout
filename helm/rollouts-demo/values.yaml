@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: argoproj/rollouts-demo
-  tag: green
+  tag: blue
 
 containerPort: 8080
 
