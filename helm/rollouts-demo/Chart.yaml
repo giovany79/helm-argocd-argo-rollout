@@ -3,6 +3,6 @@ name: rollouts-demo
 description: Demo app para Argo Rollouts con Istio y canary deployments
 type: application
 version: 1.0.0
-appVersion: "red"
+appVersion: "blue"
 # NOTA: appVersion se actualiza automáticamente al usar helm-upgrade.sh
 # o manualmente con: helm package --app-version <tag>
